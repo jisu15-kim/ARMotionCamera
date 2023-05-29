@@ -20,13 +20,18 @@ extension ARView: ARCoachingOverlayViewDelegate {
         self.addSubview(coachingOverLay)
     }
     
-    func setupTouch() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
-        self.addGestureRecognizer(tap)
-        
-        let longTouch = UILongPressGestureRecognizer(target: self, action: #selector(longTouchAction(_:)))
-        self.addGestureRecognizer(longTouch)
+    func touchAndGenerateModel(handler: Selector) {
+
     }
+
+    
+//    func setupTouch() {
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
+//        self.addGestureRecognizer(tap)
+//
+//        let longTouch = UILongPressGestureRecognizer(target: self, action: #selector(longTouchAction(_:)))
+//        self.addGestureRecognizer(longTouch)
+//    }
     
     /// 모델 터치 이벤트
     @objc func tapAction(_ sender: UITapGestureRecognizer? = nil) {

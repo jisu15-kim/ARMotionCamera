@@ -26,7 +26,7 @@ class ARViewModel {
     //MARK: - Methods
     func setupARConfiguration() -> ARWorldTrackingConfiguration {
         let config = ARWorldTrackingConfiguration()
-        config.planeDetection = [.horizontal, .vertical]
+        config.planeDetection = [.horizontal]
         return config
     }
     

@@ -36,7 +36,7 @@ class NetworkManager {
 
         // 데이터 전송
         if let dataSend = try? socket.write(from: binaryData, to: address!) {
-            print("Sent \(dataSend) bytes")
+//            print("Sent \(dataSend) bytes")
         } else {
             print("데이터 전송 오류")
         }
