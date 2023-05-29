@@ -46,8 +46,8 @@ class ARViewController: UIViewController {
     }()
 
     //MARK: - LifeCycle
-    init(ip: String, port: Int32) {
-        viewModel = ARViewModel(ip: ip, port: port)
+    init(viewModel: ARViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     

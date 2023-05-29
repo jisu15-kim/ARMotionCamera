@@ -36,7 +36,7 @@ class ConfigViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        configureData()
+        configureInitialData()
         bind()
     }
     
@@ -101,7 +101,7 @@ class ConfigViewController: UIViewController {
         return tf
     }
     
-    private func configureData() {
+    private func configureInitialData() {
         guard let ip = UserDefaults.standard.string(forKey: ConfigKeys.ip),
               let port = UserDefaults.standard.string(forKey: ConfigKeys.port) else { return }
         ipTextField.text = ip
@@ -109,7 +109,8 @@ class ConfigViewController: UIViewController {
     }
     
     private func pushARViewController(ip: String, port: Int32) {
-        let vc = ARViewController(ip: ip, port: port)
+        let viewModel = ARViewModel(ip: ip, port: port)
+        let vc = ARViewController(viewModel: viewModel)
         vc.modalPresentationStyle = .overFullScreen
         present(vc, animated: true)
     }
