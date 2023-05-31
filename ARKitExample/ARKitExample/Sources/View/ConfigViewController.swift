@@ -16,21 +16,18 @@ class ConfigViewController: UIViewController {
         static let port = "port"
     }
     
+    enum ButtonType {
+        case confirm
+        case debug
+    }
+    
     //MARK: -  Properties
     let disposeBag = DisposeBag()
     lazy var ipTextField = getTextField()
     lazy var portTextField = getTextField()
     
-    let confirmButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("완료", for: .normal)
-        button.tintColor = .white
-        button.backgroundColor = .systemIndigo
-        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        button.layer.cornerRadius = 35 / 2
-        button.clipsToBounds = true
-        return button
-    }()
+    lazy var confirmButton = getActionButton(title: "완료")
+    lazy var debugButton = getActionButton(title: "위 PORT에서 데이터 수신")
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -44,14 +41,13 @@ class ConfigViewController: UIViewController {
     private func bind() {
         confirmButton.rx.tap
             .subscribe { [weak self] _ in
-                guard let ip = self?.ipTextField.text,
-                      let port = self?.portTextField.text else { return }
-                if !ip.isEmpty && !port.isEmpty && ip.count > 8 && Int32(port) != nil {
-                    guard let port = Int32(port) else { return }
-                    UserDefaults.standard.set(ip, forKey: ConfigKeys.ip)
-                    UserDefaults.standard.set(String(port), forKey: ConfigKeys.port)
-                    self?.pushARViewController(ip: ip, port: port)
-                }
+                self?.buttonTapped(type: .confirm)
+            }
+            .disposed(by: disposeBag)
+        
+        debugButton.rx.tap
+            .subscribe { [weak self] _ in
+                self?.buttonTapped(type: .debug)
             }
             .disposed(by: disposeBag)
     }
@@ -61,7 +57,7 @@ class ConfigViewController: UIViewController {
         let ipStack = UIStackView(arrangedSubviews: [getInfoLabel("IP"), ipTextField])
         let portStack = UIStackView(arrangedSubviews: [getInfoLabel("PORT"), portTextField])
         [ipStack, portStack].forEach { $0.axis = .horizontal; $0.spacing = 10; }
-        let yStack = UIStackView(arrangedSubviews: [ipStack, portStack, confirmButton])
+        let yStack = UIStackView(arrangedSubviews: [ipStack, portStack, confirmButton, debugButton])
         yStack.axis = .vertical
         yStack.spacing = 30
         
@@ -101,6 +97,17 @@ class ConfigViewController: UIViewController {
         return tf
     }
     
+    private func getActionButton(title: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = .systemIndigo
+        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        button.layer.cornerRadius = 35 / 2
+        button.clipsToBounds = true
+        return button
+    }
+    
     private func configureInitialData() {
         guard let ip = UserDefaults.standard.string(forKey: ConfigKeys.ip),
               let port = UserDefaults.standard.string(forKey: ConfigKeys.port) else { return }
@@ -108,10 +115,30 @@ class ConfigViewController: UIViewController {
         portTextField.text = port
     }
     
-    private func pushARViewController(ip: String, port: Int32) {
-        let viewModel = ARViewModel(ip: ip, port: port)
-        let vc = ARViewController(viewModel: viewModel)
-        vc.modalPresentationStyle = .overFullScreen
-        present(vc, animated: true)
+    private func buttonTapped(type: ButtonType) {
+        guard let ip = ipTextField.text,
+              let port = portTextField.text else { return }
+        if !ip.isEmpty && !port.isEmpty && ip.count > 8 && Int32(port) != nil {
+            guard let port = Int32(port) else { return }
+            UserDefaults.standard.set(ip, forKey: ConfigKeys.ip)
+            UserDefaults.standard.set(String(port), forKey: ConfigKeys.port)
+            pushNextViewController(ip: ip, port: port, type: type)
+        }
+    }
+    
+    private func pushNextViewController(ip: String, port: Int32, type: ButtonType) {
+        DispatchQueue.main.async { [weak self] in
+            switch type {
+            case .confirm:
+                let viewModel = ARViewModel(ip: ip, port: port)
+                let vc = ARViewController(viewModel: viewModel)
+                vc.modalPresentationStyle = .overFullScreen
+                self?.present(vc, animated: true)
+            case .debug:
+                let vc = DebugViewController(ip: ip, port: port)
+                vc.modalPresentationStyle = .overFullScreen
+                self?.present(vc, animated: true)
+            }
+        }
     }
 }
