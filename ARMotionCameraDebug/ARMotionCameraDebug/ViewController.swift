@@ -1,52 +1,43 @@
 //
-//  NetworkManager.swift
-//  ARKitExample
+//  ViewController.swift
+//  ARMotionCameraDebug
 //
-//  Created by 김지수 on 2023/05/28.
+//  Created by 김지수 on 2023/06/01.
 //
 
-import Foundation
-import RxRelay
+import Cocoa
+import SnapKit
 import Socket
 
-class NetworkManager {
-    //MARK: - Properties
-    let ip: String
-    let port: Int32
-    let debugString = PublishRelay<String>()
+class ViewController: NSViewController {
     
-    //MARK: - Lifecycle
-    init(ip: String, port: Int32) {
-        self.ip = ip
-        self.port = port
+    @IBOutlet weak var debugLabel: NSTextFieldCell!
+    @IBOutlet weak var portTextField: NSTextField!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
     }
-    
-    //MARK: - Methods
-    func sendBinaryData(motionData: MotionModel) {
-//        var getMotionData = motionData
-//        var binaryData = Data()
-//        let mutableData = withUnsafeMutableBytes(of: &getMotionData) { data in
-//            Data(data)
-//        }
-        
-        guard let binaryStringData = "\(motionData.position.x)/\(motionData.position.y)/\(motionData.position.x)/\(motionData.quaternion.x)/\(motionData.quaternion.y)/\(motionData.quaternion.z)/\(motionData.quaternion.w)"
-            .data(using: .utf8) else { return }
-        
-        // 소켓 생성
-        let socket = try! Socket.create(family: .inet, type: .datagram, proto: .udp)
 
-        // UDP 주소 생성 (전송할 호스트와 포트 번호를 설정)
-        let address = Socket.createAddress(for: ip, on: port)
-
-        // 데이터 전송
-        if let dataSend = try? socket.write(from: binaryStringData, to: address!) {
-//            print("Sent \(dataSend) bytes")
-        } else {
-            print("데이터 전송 오류")
+    override var representedObject: Any? {
+        didSet {
+        // Update the view, if already loaded.
         }
     }
     
-    func receiveData() {
+    @IBAction func startButtonTapped(_ sender: Any) {
+        print("ButtonTapped")
+        
+        if portTextField != nil && Int(portTextField.stringValue) != nil {
+            let port = Int(portTextField.stringValue)!
+            receiveData(port: port)
+            
+        } else {
+            debugLabel.stringValue = "Wrong Port"
+        }
+    }
+    
+    func receiveData(port: Int) {
         DispatchQueue.global().async { [weak self] in
 
             do {
@@ -54,7 +45,6 @@ class NetworkManager {
                 let socket = try Socket.create(family: .inet, type: .datagram, proto: .udp)
 
                 // 주소와 포트를 바인딩
-                guard let port = self?.port else { return }
                 try socket.listen(on: Int(port))
                 print("UDP 소켓이 포트 \(port)에서 수신 대기중.")
 
@@ -64,9 +54,17 @@ class NetworkManager {
                 while true {
                     let (_, _) = try! socket.readDatagram(into: &buffer)
                     
-                    if let motionModel = self?.binaryDataDecoding(withMotionModelData: buffer) {
-                        self?.debugString.accept("X: \(motionModel.position.x) ⎮ Y: \(motionModel.position.y) ⎮ Z: \(motionModel.position.z)")
+                    guard let receiveString = String(data: buffer, encoding: .utf8) else { return }
+                    DispatchQueue.main.async { [weak self] in
+                        self?.debugLabel.stringValue = receiveString
                     }
+                    
+//                    if let motionModel = self?.binaryDataDecoding(withMotionModelData: buffer) {
+//                        DispatchQueue.main.async {
+//                            self?.debugLabel.stringValue =
+//                            ("X: \(motionModel.position.x) ⎮ Y: \(motionModel.position.y) ⎮ Z: \(motionModel.position.z)")
+//                        }
+//                    }
                     
                     // 버퍼 초기화
                     buffer.removeAll(keepingCapacity: true)
@@ -101,3 +99,4 @@ class NetworkManager {
         return MotionModel(position: positionModel, quaternion: quaternionModel)
     }
 }
+

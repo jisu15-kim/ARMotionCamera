@@ -28,6 +28,16 @@
 		F9C808F72A23A0FE002924E3 /* ConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C808F62A23A0FE002924E3 /* ConfigViewController.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		F906E7112A289444007BB67A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F906E70D2A289444007BB67A /* ARMotionCameraDebug.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F906E6FB2A289442007BB67A;
+			remoteInfo = ARMotionCameraDebug;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		CD454C672A08F15F00CD649A /* ARKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD454C6A2A08F15F00CD649A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +47,7 @@
 		CD454C762A08F16000CD649A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD454C782A08F16000CD649A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD454C882A08FEE200CD649A /* myCup.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = myCup.usdz; sourceTree = "<group>"; };
+		F906E70D2A289444007BB67A /* ARMotionCameraDebug.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ARMotionCameraDebug.xcodeproj; path = ../ARMotionCameraDebug/ARMotionCameraDebug.xcodeproj; sourceTree = "<group>"; };
 		F93F358A2A279E07002C24B8 /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
 		F9C808E22A239321002924E3 /* MotionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionModel.swift; sourceTree = "<group>"; };
 		F9C808E52A239378002924E3 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -66,6 +77,7 @@
 		CD454C5E2A08F15E00CD649A = {
 			isa = PBXGroup;
 			children = (
+				F906E70D2A289444007BB67A /* ARMotionCameraDebug.xcodeproj */,
 				CD454C692A08F15F00CD649A /* ARKitExample */,
 				CD454C682A08F15F00CD649A /* Products */,
 			);
@@ -93,6 +105,14 @@
 				CD454C882A08FEE200CD649A /* myCup.usdz */,
 			);
 			path = ARKitExample;
+			sourceTree = "<group>";
+		};
+		F906E70E2A289444007BB67A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F906E7122A289444007BB67A /* ARMotionCameraDebug.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		F9C808E12A23930E002924E3 /* Model */ = {
@@ -207,12 +227,28 @@
 			);
 			productRefGroup = CD454C682A08F15F00CD649A /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = F906E70E2A289444007BB67A /* Products */;
+					ProjectRef = F906E70D2A289444007BB67A /* ARMotionCameraDebug.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				CD454C662A08F15F00CD649A /* ARKitExample */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		F906E7122A289444007BB67A /* ARMotionCameraDebug.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = ARMotionCameraDebug.app;
+			remoteRef = F906E7112A289444007BB67A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CD454C652A08F15F00CD649A /* Resources */ = {
