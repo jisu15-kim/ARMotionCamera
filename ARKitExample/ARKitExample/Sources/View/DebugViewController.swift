@@ -32,6 +32,7 @@ class DebugViewController: UIViewController {
         network.debugString
             .bind(onNext: { [weak self] string in
                 DispatchQueue.main.async {
+                    print(string)
                     self?.label.text = string
                 }
             })

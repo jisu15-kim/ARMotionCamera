@@ -40,7 +40,7 @@ class NetworkManager {
 
         // 데이터 전송
         if let dataSend = try? socket.write(from: binaryStringData, to: address!) {
-//            print("Sent \(dataSend) bytes")
+            print("Sent \(dataSend) bytes")
         } else {
             print("데이터 전송 오류")
         }
@@ -54,20 +54,22 @@ class NetworkManager {
                 let socket = try Socket.create(family: .inet, type: .datagram, proto: .udp)
 
                 // 주소와 포트를 바인딩
-                guard let port = self?.port else { return }
+                guard let self = self else { return }
+                let port = Int(self.port)
                 try socket.listen(on: Int(port))
                 print("UDP 소켓이 포트 \(port)에서 수신 대기중.")
-
                 // 데이터 수신
                 var buffer = Data(capacity: 1024)
                 
                 while true {
                     let (_, _) = try! socket.readDatagram(into: &buffer)
                     
-                    if let motionModel = self?.binaryDataDecoding(withMotionModelData: buffer) {
-                        self?.debugString.accept("X: \(motionModel.position.x) ⎮ Y: \(motionModel.position.y) ⎮ Z: \(motionModel.position.z)")
-                    }
+//                    if let motionModel = self?.binaryDataDecoding(withMotionModelData: buffer) {
+//                        self?.debugString.accept("X: \(motionModel.position.x) ⎮ Y: \(motionModel.position.y) ⎮ Z: \(motionModel.position.z)")
+//                    }
                     
+                    guard let receiveString = String(data: buffer, encoding: .utf8) else { return }
+                    self.debugString.accept(receiveString)
                     // 버퍼 초기화
                     buffer.removeAll(keepingCapacity: true)
                 }
