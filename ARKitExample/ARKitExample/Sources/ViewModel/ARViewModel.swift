@@ -26,13 +26,13 @@ class ARViewModel {
     //MARK: - Methods
     func setupARConfiguration() -> ARWorldTrackingConfiguration {
         let config = ARWorldTrackingConfiguration()
-        config.planeDetection = [.horizontal]
+        config.sceneReconstruction = .meshWithClassification
         return config
     }
     
     func getModelEntity(_ model: ModelName) -> ModelEntity {
         let modelEntity = try! ModelEntity.loadModel(named: model.rawValue)
-        modelEntity.generateCollisionShapes(recursive: true)
+//        modelEntity.generateCollisionShapes(recursive: true)
         return modelEntity
     }
     

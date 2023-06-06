@@ -40,7 +40,7 @@ class NetworkManager {
 
         // 데이터 전송
         if let dataSend = try? socket.write(from: binaryStringData, to: address!) {
-            print("Sent \(dataSend) bytes")
+//            print("Sent \(dataSend) bytes")
         } else {
             print("데이터 전송 오류")
         }
@@ -57,7 +57,7 @@ class NetworkManager {
                 guard let self = self else { return }
                 let port = Int(self.port)
                 try socket.listen(on: Int(port))
-                print("UDP 소켓이 포트 \(port)에서 수신 대기중.")
+//                print("UDP 소켓이 포트 \(port)에서 수신 대기중.")
                 // 데이터 수신
                 var buffer = Data(capacity: 1024)
                 
