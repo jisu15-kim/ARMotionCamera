@@ -22,7 +22,6 @@ class ARViewModel {
         self.network = NetworkManager(ip: ip, port: port)
         bind()
     }
-    
     //MARK: - Methods
     func setupARConfiguration() -> ARWorldTrackingConfiguration {
         let config = ARWorldTrackingConfiguration()
@@ -40,7 +39,7 @@ class ARViewModel {
     private func bind() {
         motionData.subscribe { [weak self] data in
             guard let data = data.element else { return }
-            self?.network.sendBinaryData(motionData: data)
+            self?.network.sendBinaryData(_motionData: data)
         }
         .disposed(by: disposeBag)
     }
@@ -54,13 +53,13 @@ class ARViewModel {
 //        let euler = currentFrame.camera.eulerAngles
         
         // 가공
-        let position = Position(x: rowPosition.x.rounded(toPlaces: 2),
-                                y: rowPosition.y.rounded(toPlaces: 2),
-                                z: rowPosition.z.rounded(toPlaces: 2))
-        let quaternion = Quaternion(x: orientation.imag.x.rounded(toPlaces: 2),
-                                    y: orientation.imag.y.rounded(toPlaces: 2),
-                                    z: orientation.imag.z.rounded(toPlaces: 2),
-                                    w: orientation.real.rounded(toPlaces: 2))
+        let position = Position(x: rowPosition.x,
+                                y: rowPosition.y,
+                                z: rowPosition.z)
+        let quaternion = Quaternion(x: orientation.imag.x,
+                                    y: orientation.imag.y,
+                                    z: orientation.imag.z,
+                                    w: orientation.real)
         motionData.accept(MotionModel(position: position, quaternion: quaternion))
     }
 }
