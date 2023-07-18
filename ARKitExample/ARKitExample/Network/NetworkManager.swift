@@ -28,9 +28,11 @@ class NetworkManager {
 //        let mutableData = withUnsafeMutableBytes(of: &getMotionData) { data in
 //            Data(data)
 //        }
-        
-        guard let binaryStringData = "\(motionData.position.x)/\(motionData.position.y)/\(motionData.position.x)/\(motionData.quaternion.x)/\(motionData.quaternion.y)/\(motionData.quaternion.z)/\(motionData.quaternion.w)"
+        guard let binaryStringData = "\(motionData.position.x)/\(motionData.position.y)/\(motionData.position.z)/\(motionData.rotation.x)/\(motionData.rotation.y)/\(motionData.rotation.z)/\(motionData.quaternion.w)"
             .data(using: .utf8) else { return }
+        
+//        guard let binaryStringData = "\(motionData.position.x)/\(motionData.position.y)/\(motionData.position.z)/\(motionData.quaternion.x)/\(motionData.quaternion.y)/\(motionData.quaternion.z)/\(motionData.quaternion.w)"
+//            .data(using: .utf8) else { return }
         
         // 소켓 생성
         let socket = try! Socket.create(family: .inet, type: .datagram, proto: .udp)
@@ -91,6 +93,12 @@ class NetworkManager {
         let positionY = positionBytes.advanced(by: 4).withUnsafeBytes { $0.load(as: Float.self) }
         let positionZ = positionBytes.advanced(by: 8).withUnsafeBytes { $0.load(as: Float.self) }
         
+        let rotaionBytes = data.prefix(12)
+        let rotationX = rotaionBytes.withUnsafeBytes { $0.load(as: Float.self) }
+        let rotationY = rotaionBytes.advanced(by: 4).withUnsafeBytes { $0.load(as: Float.self) }
+        let rotationZ = rotaionBytes.advanced(by: 8).withUnsafeBytes { $0.load(as: Float.self) }
+
+        
         let quaternionBytes = data.suffix(16)
         let quaternionX = quaternionBytes.withUnsafeBytes { $0.load(as: Float.self) }
         let quaternionY = quaternionBytes.advanced(by: 4).withUnsafeBytes { $0.load(as: Float.self) }
@@ -98,8 +106,10 @@ class NetworkManager {
         let quaternionW = quaternionBytes.advanced(by: 12).withUnsafeBytes { $0.load(as: Float.self) }
         
         let positionModel = Position(x: positionX, y: positionY, z: positionZ)
+        let rotationModel = Rotation(x: rotationX, y: rotationY, z: rotationZ)
         let quaternionModel = Quaternion(x: quaternionX, y: quaternionY, z: quaternionZ, w: quaternionW)
         
-        return MotionModel(position: positionModel, quaternion: quaternionModel)
+        
+        return MotionModel(position: positionModel, rotation: rotationModel ,quaternion: quaternionModel)
     }
 }

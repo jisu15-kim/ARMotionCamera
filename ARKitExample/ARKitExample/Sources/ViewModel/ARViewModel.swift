@@ -10,6 +10,7 @@ import ARKit
 import RxSwift
 import RxRelay
 import RealityKit
+import simd
 
 class ARViewModel {
     //MARK: - Properties
@@ -39,7 +40,7 @@ class ARViewModel {
     private func bind() {
         motionData.subscribe { [weak self] data in
             guard let data = data.element else { return }
-            self?.network.sendBinaryData(_motionData: data)
+            self?.network.sendBinaryData(motionData: data)
         }
         .disposed(by: disposeBag)
     }
@@ -48,18 +49,28 @@ class ARViewModel {
     func processARCamera(currentFrame: ARFrame) {
         let cameraTransform = currentFrame.camera.transform
         
+        
         let rowPosition = cameraTransform.columns.3
+        let eulerAngles = currentFrame.camera.eulerAngles
         let orientation = simd_quaternion(cameraTransform)
-//        let euler = currentFrame.camera.eulerAngles
+
+        let rowRotation = simd_quatf(cameraTransform)
         
         // 가공
         let position = Position(x: rowPosition.x,
                                 y: rowPosition.y,
                                 z: rowPosition.z)
+        
+        let rotation = Rotation(x: eulerAngles.x,
+                                  y: eulerAngles.y,
+                                  z: eulerAngles.z)
+        
         let quaternion = Quaternion(x: orientation.imag.x,
                                     y: orientation.imag.y,
                                     z: orientation.imag.z,
                                     w: orientation.real)
-        motionData.accept(MotionModel(position: position, quaternion: quaternion))
+        
+
+        motionData.accept(MotionModel(position: position,rotation: rotation, quaternion: quaternion))
     }
 }
