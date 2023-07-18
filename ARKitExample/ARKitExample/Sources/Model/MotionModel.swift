@@ -9,7 +9,9 @@ import Foundation
 
 struct MotionModel: Codable {
     let position: Position
+    let rotation: Rotation
     let quaternion: Quaternion
+    
 }
 
 struct Position: Codable {
@@ -17,6 +19,13 @@ struct Position: Codable {
     let y: Float
     let z: Float
 }
+
+struct Rotation: Codable {
+    let x: Float
+    let y: Float
+    let z: Float
+}
+
 
 struct Quaternion: Codable {
     let x: Float

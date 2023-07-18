@@ -65,6 +65,7 @@ class ARViewController: UIViewController {
         bind()
         setupARKit()
     }
+        
     //MARK: - Bind
     private func bind() {
         
@@ -82,7 +83,7 @@ class ARViewController: UIViewController {
             .bind { [weak self] data in
                 guard let self = self else { return }
                 self.debugLabel.text =
-                "Position \nX: \(data.position.x) / Y: \(data.position.y) / Z: \(data.position.z) \nQuaternion \nX: \(data.quaternion.x) / Y: \(data.quaternion.y) / Z: \(data.quaternion.z) / W: \(data.quaternion.w)"
+                "Position \nX: \(floor(data.position.x*100)/100) / Y: \(floor(data.position.y*100)/100) / Z: \(floor(data.position.z*100)/100) \nQuaternion \nX: \(floor(data.rotation.x*100)/100) / Y: \(floor(data.rotation.y*100)/100) / Z: \(floor(data.rotation.z*100)/100) / W: \(floor(data.quaternion.w*100)/100)"
             }
             .disposed(by: disposeBag)
     }
