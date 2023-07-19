@@ -126,18 +126,24 @@ class ARViewController: UIViewController {
     }
     
     private func resetButtonTapped() {
-        let alert = UIAlertController(title: "위치 리셋", message: "🔥리얼리 리셋 원함요?", preferredStyle: .alert)
-        let confirm = UIAlertAction(title: "리셋고고🔥", style: .destructive) { [weak self] _ in
-            self?.resetARSession()
+        let alert = UIAlertController(title: "기준 위치 리셋", message: "기준점 위치 리셋을 진행하시겠습니까?", preferredStyle: .alert)
+        let confirm = UIAlertAction(title: "리셋하기", style: .destructive) { [weak self] _ in
+            
+            let tempAlert = UIAlertController(title: "준비중", message: "준비중인 기능입니다.", preferredStyle: .alert)
+            let confirmAction = UIAlertAction(title: "확인", style: .default)
+            self?.present(tempAlert, animated: true)
+//            self?.resetARSession()
         }
-        let cancel = UIAlertAction(title: "다시 생각하기", style: .default)
+        let cancel = UIAlertAction(title: "취소", style: .default)
         alert.addAction(confirm)
         alert.addAction(cancel)
         present(alert, animated: true)
     }
     
     private func resetARSession() {
-
+//        arView.session.setWorldOrigin(relativeTransform: .init()
+        
+        arView.session.run(viewModel.setupARConfiguration())
     }
     
     //MARK: - Selector
