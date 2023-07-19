@@ -54,7 +54,7 @@ class ARViewModel {
         let eulerAngles = currentFrame.camera.eulerAngles
         let orientation = simd_quaternion(cameraTransform)
 
-        let rowRotation = simd_quatf(cameraTransform)
+//        let rowRotation = simd_quatf(cameraTransform)
         
         // 가공
         let position = Position(x: rowPosition.x,
@@ -71,6 +71,6 @@ class ARViewModel {
                                     w: orientation.real)
         
 
-        motionData.accept(MotionModel(position: position,rotation: rotation, quaternion: quaternion))
+        motionData.accept(MotionModel(position: position, rotation: rotation, quaternion: quaternion))
     }
 }

@@ -30,6 +30,7 @@ class ARViewController: UIViewController {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .white
+        label.textAlignment = .center
         label.text = "N/A"
         label.numberOfLines = 0
         return label
@@ -40,10 +41,17 @@ class ARViewController: UIViewController {
         view.backgroundColor = .black.withAlphaComponent(0.4)
         view.addSubview(debugLabel)
         debugLabel.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.centerY.equalToSuperview()
+            $0.centerX.centerY.equalToSuperview()
         }
         return view
+    }()
+    
+    let resetButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("🕹️Reset", for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = .systemIndigo
+        return button
     }()
 
     var modelsForClassification: [ARMeshClassification: ModelEntity] = [:]
@@ -82,8 +90,22 @@ class ARViewController: UIViewController {
         viewModel.motionData
             .bind { [weak self] data in
                 guard let self = self else { return }
-                self.debugLabel.text =
-                "Position \nX: \(floor(data.position.x*100)/100) / Y: \(floor(data.position.y*100)/100) / Z: \(floor(data.position.z*100)/100) \nQuaternion \nX: \(floor(data.rotation.x*100)/100) / Y: \(floor(data.rotation.y*100)/100) / Z: \(floor(data.rotation.z*100)/100) / W: \(floor(data.quaternion.w*100)/100)"
+                
+                let positionX = data.position.x.formatToSecond
+                let positionY = data.position.y.formatToSecond
+                let positionZ = data.position.z.formatToSecond
+                let rotationX = data.rotation.x.formatToSecond
+                let rotationY = data.rotation.y.formatToSecond
+                let rotationZ = data.rotation.z.formatToSecond
+                
+                self.debugLabel.text = "Position - X: \(positionX) Y: \(positionY) Z: \(positionZ)\nRotation - X: \(rotationX) Y: \(rotationY) Z: \(rotationZ)"
+            }
+            .disposed(by: disposeBag)
+        
+        resetButton.rx.tap
+            .asObservable()
+            .subscribe { [weak self] _ in
+                self?.resetButtonTapped()
             }
             .disposed(by: disposeBag)
     }
@@ -101,6 +123,21 @@ class ARViewController: UIViewController {
         arView.session.run(viewModel.setupARConfiguration()) // ARSession 자동설정 비활성화
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapScreen(_:)))
         arView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    private func resetButtonTapped() {
+        let alert = UIAlertController(title: "위치 리셋", message: "🔥리얼리 리셋 원함요?", preferredStyle: .alert)
+        let confirm = UIAlertAction(title: "리셋고고🔥", style: .destructive) { [weak self] _ in
+            self?.resetARSession()
+        }
+        let cancel = UIAlertAction(title: "다시 생각하기", style: .default)
+        alert.addAction(confirm)
+        alert.addAction(cancel)
+        present(alert, animated: true)
+    }
+    
+    private func resetARSession() {
+
     }
     
     //MARK: - Selector
@@ -265,7 +302,17 @@ class ARViewController: UIViewController {
         view.addSubview(debugView)
         debugView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
-            $0.height.equalTo(200)
+            $0.height.equalTo(100)
+        }
+        
+        debugView.addSubview(resetButton)
+        resetButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(60)
+            $0.width.equalTo(120)
+            resetButton.layer.cornerRadius = 30
+            resetButton.clipsToBounds = true
         }
     }
     
@@ -281,6 +328,7 @@ class ARViewController: UIViewController {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 16)
         label.text = title
+        label.textAlignment = .center
         label.textColor = .white
         return label
     }

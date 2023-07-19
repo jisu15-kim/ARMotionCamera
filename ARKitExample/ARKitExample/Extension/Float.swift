@@ -8,9 +8,10 @@
 import Foundation
 
 extension Float {
-//    //MARK: - 소수 짜르기 !
-//    func rounded(toPlaces places: Int) -> Float {
-//        let divisor = pow(10.0, Float(places))
-//        return (self * divisor).rounded() / divisor
-//    }
+    var formatToSecond: String {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        return formatter.string(from: NSNumber(value: self)) ?? "\(self)"
+    }
 }
