@@ -61,9 +61,9 @@ class ARViewModel {
                                 y: rowPosition.y,
                                 z: rowPosition.z)
         
-        let rotation = Rotation(x: eulerAngles.x,
-                                  y: eulerAngles.y,
-                                  z: eulerAngles.z)
+        let rotation = Rotation(x: eulerAngles.x * 180 / .pi,
+                                y: eulerAngles.y * 180 / .pi,
+                                z: eulerAngles.z * 180 / .pi)
         
         let quaternion = Quaternion(x: orientation.imag.x,
                                     y: orientation.imag.y,
